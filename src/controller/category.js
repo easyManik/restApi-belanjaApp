@@ -1,6 +1,6 @@
 const ModelCategory = require('../model/category');
 const CategoryController = {
-  update: (req, res, next) => {
+  update: (req, res) => {
     ModelCategory.updateData(req.params.id, req.body)
       .then((result) => res.send(
         {
@@ -8,24 +8,24 @@ const CategoryController = {
           message: 'Berhasil memasukan data',
           data: result
         })
-        ).catch((err) => res.send({ message: 'error', err }))
+      ).catch((err) => res.send({ message: 'error', err }))
   },
-  delete: (req, res, next) => {
+  delete: (req, res) => {
     ModelCategory.deleteData(req.params.id)
-      .then((result) =>
+      .then(() =>
         res.send({ status: 200, message: 'Berhasil memasukan data' })
       ).catch((err) => res.send({ message: 'error', err }));
   },
-  getProduct: (req, res, next) => {
+  getProduct: (req, res) => {
     ModelCategory.selectData()
       .then((result) => res.send({ result: result.rows }))
       .catch((err) => res.send({ message: 'error', err }));
   },
-  insert: (req, res, next) => {
+  insert: (req, res) => {
     ModelCategory.insertData(req.body)
-      .then((result) =>
+      .then(() =>
         res.send({ status: 200, message: 'Berhasil memasukan data' })
       )
       .catch((err) => res.send({ message: 'error', err }))}
-    };
+  };
 exports.CategoryController = CategoryController;

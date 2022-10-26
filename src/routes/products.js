@@ -1,11 +1,17 @@
 const express = require('express');
+
+
 const router = express.Router();
 const { ProductController } = require('../controller/products');
+const { product } = require('../middleware/products');
+
 router.get('/', ProductController.getProduct);
-router.post('/', ProductController.insert);
+router.post('/', product, ProductController.insert);
 router.put('/:id', ProductController.update);
 router.delete('/:id', ProductController.delete);
-router.search('/', ProductController.searchData)
-router.get('/', ProductController.sortData)
-router.get('/', ProductController.pagination)
+router.get('/:search', ProductController.searchData);
+router.get('/:sort', ProductController.sortData);
+router.get('/:pagination', ProductController.pagination);
+router.get('//', ProductController.getData);
+
 module.exports = router;

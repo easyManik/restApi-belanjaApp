@@ -7,7 +7,6 @@ const insertData = (data) => {
 const {id, name, stock, price} = data;
   return Pool.query(`INSERT INTO products(id,name,stock,price) VALUES(${id},'${name}',${stock},${price})`);
 }
-
 const updateData = (id, data) => {
 const {name, stock, price} = data;
   return Pool.query(`UPDATE products SET name='${name}',stock='${stock}',price='${price}' WHERE id='${id}'`);
@@ -16,12 +15,16 @@ const deleteData = (id) => {
   return Pool.query(`DELETE FROM products where id ='${id}'`);
 }
 const searchData = (data) =>{
-  return Pool.query(`SELECT * FROM products WHERE name LIKE '${data}'`)
+  return Pool.query(`SELECT * FROM products WHERE name ILIKE '%${data}%'`)
 }
-const sortData = () =>{
-  return Pool.query(`SELECT * FROM products ORDER BY id asc`)
+const sortData = (sortby, sort, page, limit) => {
+  return Pool.query(`SELECT * FROM products ORDER BY ${sortby} ${sort} OFFSET ${page} LIMIT ${limit} `)
 }
-const pagination = () =>{
-  return Pool.query(`SELECT * FROM products LIMIT 20 OFFSET 40`)
+const pagination = (_limit, _offset) =>{
+  return Pool.query(`SELECT * FROM products LIMIT ${_limit} OFFSET ${_offset}`)
 }
-module.exports = {selectData, insertData, deleteData, updateData, searchData, sortData, pagination }
+const getData = () => {
+  return Pool.query(`SELECT products.name AS product_name, products.price AS harga, category.name AS category_name FROM products JOIN category ON products.category_id = category.id`)
+}
+
+module.exports = {selectData, insertData, deleteData, updateData, searchData, sortData, pagination, getData }
