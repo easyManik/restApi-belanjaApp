@@ -1,6 +1,8 @@
 const express = require('express');
+
 const router = express.Router();
 const { TransactionsController } = require('../controller/transactions');
+
 router.get('/', TransactionsController.getProduct);
 router.post('/', TransactionsController.insert);
 router.put('/:id', TransactionsController.update);

@@ -1,23 +1,21 @@
-require('dotenv').config()
+require('dotenv').config();
 
 const express = require('express');
 
 const bodyParser = require('body-parser');
+const helmet = require('helmet');
+const xss = require('xss-clean');
+const cors = require('cors');
 const products = require('./src/routes/products');
 const category = require('./src/routes/category');
 const transactions = require('./src/routes/transaction');
 const paymentstatus = require('./src/routes/paymentStatus');
-const helmet = require('helmet');
-const xss = require('xss-clean');
-const cors = require('cors');
 
 const app = express();
-const port = 3000;
 
-
-app.use(xss())
-app.use(cors())
-app.use(helmet())
+app.use(xss());
+app.use(cors());
+app.use(helmet());
 
 app.use(bodyParser.json());
 app.use('/products', products);
