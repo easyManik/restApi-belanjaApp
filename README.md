@@ -3,8 +3,7 @@
 Projek ini adalah bagian dari tugas week 3 technical pada pijar camp batch 6 dengan alur Fullstack Website developer
 
 Membuat API dari aplikasi pada desain figma berikut:
-https://www.figma.com/file/F2wIb9WHG4kntUkbFC39OB/Mockup-Web?node-id
-=0%3A1
+https://www.figma.com/file/F2wIb9WHG4kntUkbFC39OB/Mockup-Web?node-id=0%3A1
 
 Requirement pada projek:
 1. Flowchart Aplikasi 
