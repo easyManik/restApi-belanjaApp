@@ -6,7 +6,7 @@ const { product } = require('../middleware/products');
 
 router.get('/', ProductController.getProduct);
 router.post('/', product, ProductController.insert);
-router.put('/:id', ProductController.update);
+router.put('/:id', product, ProductController.update);
 router.delete('/:id', ProductController.delete);
 router.get('/:search', ProductController.searchData);
 router.get('/:sort', ProductController.sortData);

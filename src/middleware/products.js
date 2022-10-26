@@ -1,7 +1,3 @@
-const { clean } = require('xss-clean/lib/xss');
-
-const cleaned = clean('<script></script>');
-
 const product = (req, res, next) => {
   const {
     name, stock, price, category_id,
