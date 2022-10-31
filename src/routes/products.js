@@ -2,15 +2,18 @@ const express = require('express');
 
 const router = express.Router();
 const { ProductController } = require('../controller/products');
-const { product } = require('../middleware/products');
+// const { errorHandling } = require('../middleware/errorHandling');
+const { validateStock } = require('../helpers/stock');
+const { protect } = require('../middleware/auth');
+const upload = require('../middleware/upload');
 
-router.get('/', ProductController.getProduct);
-router.post('/', product, ProductController.insert);
-router.put('/:id', product, ProductController.update);
-router.delete('/:id', ProductController.delete);
-router.get('/:search', ProductController.searchData);
-router.get('/:sort', ProductController.sortData);
-router.get('/:pagination', ProductController.pagination);
-router.get('//', ProductController.getData);
+router.get('/', protect, ProductController.getProduct);
+router.post('/', protect, upload.single('photo'), validateStock, ProductController.insert);
+router.put('/:id', protect, ProductController.update);
+router.delete('/:id', protect, ProductController.delete);
+router.get('/:search', protect, ProductController.searchData);
+router.get('/:sort', protect, ProductController.sortData);
+router.get('/:pagination', protect, ProductController.pagination);
+router.get('//', protect, ProductController.getData);
 
 module.exports = router;

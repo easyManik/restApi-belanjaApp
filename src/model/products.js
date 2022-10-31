@@ -1,11 +1,15 @@
 const Pool = require('../config/db');
 
 const selectData = () => Pool.query('SELECT * FROM products');
+console.log('data', selectData())
 const insertData = (data) => {
   const {
-    id, name, stock, price,
+    name, stock, price, photo
   } = data;
-  return Pool.query(`INSERT INTO products(id,name,stock,price) VALUES(${id},'${name}',${stock},${price})`);
+  console.log('data',data)
+  return Pool.query(
+    `INSERT INTO products(name,stock,price,category_id,photo) VALUES('${name}',${stock},${price},1,'${photo}')`
+  );
 };
 const updateData = (id, data) => {
   const { name, stock, price } = data;
