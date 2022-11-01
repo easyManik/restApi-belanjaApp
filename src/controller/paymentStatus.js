@@ -1,29 +1,28 @@
 const PSProduct = require('../model/paymentStatus');
+const { common } = require('../middleware/common');
 
 const PSController = {
   update: (req, res) => {
     PSProduct.updateData(req.params.id, req.body)
-      .then((result) => res.send({
-        status: 200,
-        message: 'berhasil memasukan data',
-        data: result,
-      }))
-      .catch((err) => res.send({ message: 'error', err }));
+      .then((result) => common(res, 200, true, result, 'Success update data'))
+      .catch((err) => common(res, 404, false, err, 'fail to update data'));
   },
   delete: (req, res) => {
     PSProduct.deleteData(req.params.id)
-      .then(() => res.send({ status: 200, message: 'berhasil menghapus data' }))
-      .catch((err) => res.send({ message: 'error', err }));
+      .then((result) => common(res, 200, true, result, 'Success delete data'))
+      .catch((err) => common(res, 404, false, err, 'fail to delete data'));
   },
   getProduct: (req, res) => {
     PSProduct.selectData()
-      .then((result) => res.send({ result: result.rows }))
-      .catch((err) => res.send({ message: 'error', err }));
+      .then((result) => common(res, 200, true, result.rows, 'Success get data'))
+      .catch((err) => common(res, 404, false, err, 'fail to get data'));
   },
   insert: (req, res) => {
+    req.body.stock = parseInt(req.body.stock);
+    req.body.price = parseInt(req.body.price);
     PSProduct.insertData(req.body)
-      .then(() => res.send({ status: 200, message: 'berhasil memasukan data' }))
-      .catch((err) => res.send({ message: 'error', err }));
+      .then((result) => common(res, 200, true, result.rows, 'get data success'))
+      .catch((err) => common(res, 404, false, err, 'fail to insert data'));
   },
 };
 exports.PSController = PSController;

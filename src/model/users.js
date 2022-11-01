@@ -13,7 +13,6 @@ const create = (data) => {
   }));
 };
 
-
 const findEmail = (email) => new Promise((resolve, reject) => Pool.query(`SELECT * FROM users where email='${email}'`, (err, result) => {
   if (!err) {
     resolve(result);

@@ -26,10 +26,11 @@ const protect = (req, res, next) => {
     console.log(err);
     if (err && err.name == 'JsonWebTokenError') {
       return common(res, 404, false, null, 'invalid token');
-    } if (err && err.name == 'TokenExpriredError') {
+    } else if (err && err.name == 'TokenExpriredError') {
       return common(res, 404, false, null, 'expired token');
+    } else {
+      return common(res, 404, false, null, 'token not active');
     }
-    return common(res, 404, false, null, 'token not active');
   }
 };
 

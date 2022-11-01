@@ -8,13 +8,12 @@ const transactions = require('./transaction');
 const paymentstatus = require('./paymentStatus');
 const users = require('./users');
 
-const app = express();
+// const app = express();
 
-app.use('/products', products);
-app.use('/category', category);
-app.use('/transactions', transactions);
-app.use('/paymentstatus', paymentstatus);
-app.use('/users', users);
-
+router.use('/products', products);
+router.use('/category', category);
+router.use('/transactions', transactions);
+router.use('/paymentstatus', paymentstatus);
+router.use('/users', users);
 
 module.exports = router;

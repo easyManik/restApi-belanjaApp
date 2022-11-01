@@ -6,16 +6,16 @@ Membuat API dari aplikasi pada desain figma berikut:
 https://www.figma.com/file/F2wIb9WHG4kntUkbFC39OB/Mockup-Web?node-id=0%3A1
 
 Requirement pada projek:
-1. Flowchart Aplikasi 
+
+1. Flowchart Aplikasi
 2. Membuat database dengan 4 table yaitu tabel products, category, transaction dan payment_status.
 3. CRUD
-5. Proses sorting pada data API dengan menggunakan query pada model.
-6. Proses search pada data API dengan menggunakan query pada model.
-7. Proses pagination data API dengan menggunakan query pada model.
-8. Linter
-9. Error Handling
-10. Cors
-11. ENV
-12. XSS-Clean
-13. Helmet
-
+4. Proses sorting pada data API dengan menggunakan query pada model.
+5. Proses search pada data API dengan menggunakan query pada model.
+6. Proses pagination data API dengan menggunakan query pada model.
+7. Linter
+8. Error Handling
+9. Cors
+10. ENV
+11. XSS-Clean
+12. Helmet

@@ -11,5 +11,8 @@ const updateData = (id, data) => {
 };
 const deleteData = (id) => Pool.query(`DELETE FROM category where id = ${id}`);
 module.exports = {
-  selectData, insertData, deleteData, updateData,
+  selectData,
+  insertData,
+  deleteData,
+  updateData,
 };
