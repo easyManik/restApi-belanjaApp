@@ -25,7 +25,7 @@ app.use('/img', express.static('/upload'));
 app.all('*', (req, res, next) => {
   common(res, 404, false, null, '404 Not Found');
 });
-// console.log('env', process.env)
+// console.log('env', process.env.JWT_KEY);
 // console.log('data', getProduct);
 
 app.get('/', (req, res, next) => {

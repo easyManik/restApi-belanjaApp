@@ -7,14 +7,8 @@ const { validateStock } = require('../helpers/stock');
 const { protect } = require('../middleware/auth');
 const upload = require('../middleware/upload');
 
-router.get('/', ProductController.getProduct);
-router.post(
-  '/',
-  protect,
-  validateStock,
-  upload.single('photo'),
-  ProductController.insert
-);
+router.get('/', protect, ProductController.getProduct);
+router.post('/', upload.single('photo'), ProductController.insert);
 router.put('/:id', protect, ProductController.update);
 router.delete('/:id', protect, ProductController.delete);
 router.get('/:search', protect, ProductController.searchData);
