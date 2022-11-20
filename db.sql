@@ -1,12 +1,13 @@
--- Active: 1667191050486@@localhost@5432
+-- Active: 1667191050486@@localhost@5432@postgres
 CREATE TABLE products (
     id SERIAL PRIMARY KEY,
     name VARCHAR NOT NULL,
     stock INT NOT NULL,
     price INT NOT NULL,
-    category VARCHAR,
     category_id INT REFERENCES category(id)
 );
+
+DELETE TABLE products;
 
 CREATE TABLE category(
     id SERIAL PRIMARY KEY,
@@ -58,18 +59,10 @@ JOIN payment_status ON transactions.status = payment_status.id;
 UPDATE transactions SET status=2 WHERE id=1;
 
 ALTER TABLE transactions ADD username VARCHAR(255) AFTER id;
-
-CREATE Table users(
-    id VARCHAR PRIMARY KEY,
-    email VARCHAR NOT NULL,
-    password VARCHAR NOT NULL,
-    fullname VARCHAR,
-    role VARCHAR
-);
-
-
-INSERT INTO users(id,email,password,fullname,role) VALUES('2','easymanik@gmail.com','11223344','easy destini manik','admin');
-
-SELECT * FROM users where email='easy@gmail.com';
+ALTER TABLE users ADD verif INT
 
 ALTER TABLE products ADD photo VARCHAR(255);
+ALTER TABLE users ADD otp varchar(32)
+
+
+

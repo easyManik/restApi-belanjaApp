@@ -1,37 +1,36 @@
 const express = require('express');
-
-const bodyParser = require('body-parser');
-const helmet = require('helmet');
-const xss = require('xss-clean');
-const cors = require('cors');
-const morgan = require('morgan');
 require('dotenv').config();
 
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
+const cors = require('cors');
 const { common } = require('./src/middleware/common');
 
 const router = require('./src/routes/index');
 
 const app = express();
 
-app.use(xss());
+const port = 4200;
+
 app.use(cors());
-app.use(helmet());
 app.use(morgan('dev'));
+
+app.use('/img', express.static('./tmp'));
 app.use(bodyParser.json());
 
+app.use(express.urlencoded({ extended: true }));
+
 app.use('/', router);
-app.use('/img', express.static('/upload'));
+app.use('/img', express.static('./tmp'));
 
 app.all('*', (req, res, next) => {
   common(res, 404, false, null, '404 Not Found');
 });
-// console.log('env', process.env.JWT_KEY);
-// console.log('data', getProduct);
 
 app.get('/', (req, res, next) => {
   res.status(200).json({ status: 'success', statusCode: 200 });
 });
 
-app.listen(process.env.PORT, () => {
-  console.log(`Example app listening on port ${process.env.PORT}`);
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
 });

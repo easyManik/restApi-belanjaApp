@@ -1,17 +1,29 @@
 const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
 const { common } = require('../middleware/common');
-const { create, findEmail } = require('../model/users');
+const { create, findEmail, verification } = require('../model/users');
 const { generateToken } = require('../helpers/auth');
+const email = require('../middleware/email');
+
+const Port = process.env.PORT;
+const Host = process.env.HOST;
 
 const UsersController = {
   insert: async (req, res, next) => {
-    const { rows: [users] } = await findEmail(req.body.email);
+    const {
+      rows: [users],
+    } = await findEmail(req.body.email);
     console.log('role', req.params.role);
-    const { role } = req.params;
+    const role = req.params.role;
 
     if (users) {
       return common(res, 404, false, 'email already use', ' register fail');
+    }
+
+    const digit = '0123456789';
+    let otp = '';
+    for (let i = 0; i < 6; i++) {
+      otp += digit[Math.floor(Math.random() * 10)];
     }
 
     const salt = bcrypt.genSaltSync(10);
@@ -22,12 +34,24 @@ const UsersController = {
       password,
       fullname: req.body.fullname,
       role,
+      otp,
     };
     try {
       const result = await create(data);
       if (result) {
         console.log(result);
-        common(res, 200, true, true, 'register success');
+        const verifyUrl = `http://${Host}:${Port}/users/${req.body.email}/${otp}`;
+        const sendEmail = email(data.email, otp, verifyUrl, data.fullname);
+        if (sendEmail == 'email not send') {
+          return common(res, 404, false, null, ' register fail');
+        }
+        common(
+          res,
+          200,
+          true,
+          { email: data.email },
+          'register success. check email!'
+        );
       }
     } catch (err) {
       console.log(err);
@@ -37,22 +61,60 @@ const UsersController = {
   login: async (req, res, next) => {
     console.log('email', req.body.email);
     console.log('password', req.body.password);
-    const { rows: [users] } = await findEmail(req.body.email);
+
+    // let {rows:[users]} = await findEmail(req.body.email)
+    // if(!users){
+    //   return common(res, 404, false, null, ' email not found');
+
+    // }
+
+    const {
+      rows: [users],
+    } = await findEmail(req.body.email);
     if (!users) {
       return common(res, 404, false, null, ' email not found');
     }
-    const { password } = req.body;
+
+    if (users.verif == 0) {
+      return common(res, 404, false, null, ' email not verify');
+    }
+
+    const password = req.body.password;
     const validation = bcrypt.compareSync(password, users.password);
     if (!validation) {
       return common(res, 404, false, null, 'wrong password');
     }
     delete users.password;
+    delete users.otp;
+    delete users.verif;
     const payload = {
       email: users.email,
       role: users.role,
     };
     users.token = generateToken(payload);
     common(res, 200, false, users, 'login success');
+  },
+
+  otp: async (req, res, next) => {
+    console.log('Email', req.params.email);
+    console.log('Password', req.params.otp);
+    const {
+      rows: [users],
+    } = await findEmail(req.params.email);
+    if (!users) {
+      return common(res, 404, false, null, 'email not found');
+    }
+    if (users.otp == req.params.otp) {
+      const result = await verification(req.params.email);
+      return common(res, 200, true, result, 'verification email success ');
+    }
+    return common(
+      res,
+      404,
+      false,
+      null,
+      'Otp not valid, please check your email!'
+    );
   },
 };
 
