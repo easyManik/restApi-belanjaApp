@@ -61,13 +61,11 @@ const UsersController = {
   login: async (req, res, next) => {
     console.log('email', req.body.email);
     console.log('password', req.body.password);
-
     // let {rows:[users]} = await findEmail(req.body.email)
     // if(!users){
     //   return common(res, 404, false, null, ' email not found');
 
     // }
-
     const {
       rows: [users],
     } = await findEmail(req.body.email);
@@ -96,16 +94,17 @@ const UsersController = {
   },
 
   otp: async (req, res, next) => {
-    console.log('Email', req.params.email);
-    console.log('Password', req.params.otp);
+    console.log('Email', req.body.email);
+    console.log('Password', req.body.otp);
     const {
       rows: [users],
-    } = await findEmail(req.params.email);
+    } = await findEmail(req.body.email);
     if (!users) {
       return common(res, 404, false, null, 'email not found');
     }
-    if (users.otp == req.params.otp) {
-      const result = await verification(req.params.email);
+
+    if (users.otp == req.body.otp) {
+      const result = await verification(req.body.email);
       return common(res, 200, true, result, 'verification email success ');
     }
     return common(

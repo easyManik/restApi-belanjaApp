@@ -6,6 +6,6 @@ const { role } = require('../middleware/auth');
 
 router.post('/register/:role', role, UsersController.insert);
 router.post('/login', UsersController.login);
-router.get('/:email/:otp', UsersController.otp);
+router.post('/verif', UsersController.otp);
 
 module.exports = router;
