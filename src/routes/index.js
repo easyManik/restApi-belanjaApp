@@ -1,19 +1,17 @@
 const express = require('express');
-
 const router = express.Router();
+const categoryRouter = require('./category');
+const productRouter = require('./product');
+const orderRouter = require('./checkout');
+const usersRouter = require('./users');
+const cartRouter = require('./cart');
+const transactionRouter = require('./transaction');
 
-const products = require('./products');
-const category = require('./category');
-const transactions = require('./transaction');
-const paymentstatus = require('./paymentStatus');
-const users = require('./users');
-
-// const app = express();
-
-router.use('/products', products);
-router.use('/category', category);
-router.use('/transactions', transactions);
-router.use('/paymentstatus', paymentstatus);
-router.use('/users', users);
-
+router
+  .use('/product', productRouter)
+  .use('/category', categoryRouter)
+  .use('/checkout', orderRouter)
+  .use('/users', usersRouter)
+  .use('/cart', cartRouter)
+  .use('/transaction', transactionRouter);
 module.exports = router;

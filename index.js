@@ -1,36 +1,41 @@
-const express = require('express');
 require('dotenv').config();
-
-const bodyParser = require('body-parser');
-const morgan = require('morgan');
+const express = require('express');
 const cors = require('cors');
-const { common } = require('./src/middleware/common');
+const createError = require('http-errors');
+const morgan = require('morgan');
+const helmet = require('helmet');
 
-const router = require('./src/routes/index');
+const path = require('path');
+const mainRouter = require('./src/routes');
 
 const app = express();
+const PORT = process.env.PORT || 5000;
 
-const port = 4200;
-
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.use(morgan('dev'));
-
-app.use('/img', express.static('./tmp'));
-app.use(bodyParser.json());
-
-app.use(express.urlencoded({ extended: true }));
-
-app.use('/', router);
-app.use('/img', express.static('./tmp'));
+app.use(
+  helmet({
+    crossOriginResourcePolicy: false,
+  })
+);
+app.use('/', mainRouter);
+app.use('/img', express.static(path.join(__dirname, '/upload')));
 
 app.all('*', (req, res, next) => {
-  common(res, 404, false, null, '404 Not Found');
+  next(new createError.NotFound());
 });
 
-app.get('/', (req, res, next) => {
-  res.status(200).json({ status: 'success', statusCode: 200 });
+app.use((err, req, res, next) => {
+  const messError = err.message || 'internal server error';
+  const statusCode = err.status || 500;
+
+  res.status(statusCode).json({
+    message: messError,
+  });
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+app.listen(PORT, () => {
+  console.log(`Server starting on port ${PORT}`);
 });

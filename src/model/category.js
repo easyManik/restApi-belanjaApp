@@ -1,18 +1,73 @@
-const Pool = require('../config/db');
+const pool = require('../config/db');
 
-const selectData = () => Pool.query('SELECT * FROM category');
-const insertData = (data) => {
-  const { id, name } = data;
-  return Pool.query(`INSERT INTO category(id,name) VALUES(${id},'${name}')`);
+exports.select = ({ limit, offset }) => {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      'SELECT * FROM category LIMIT $1 OFFSET $2',
+      [limit, offset],
+      (err, result) => {
+        if (!err) {
+          resolve(result.rows);
+        } else {
+          reject(new Error(err));
+        }
+      }
+    );
+  });
 };
-const updateData = (id, data) => {
-  const { name } = data;
-  return Pool.query(`UPDATE category SET name='${name}' WHERE id = ${id}`);
+
+exports.insert = ({ name }) => {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      'INSERT INTO category(name)VALUES($1)',
+      [name],
+      (err, result) => {
+        if (!err) {
+          resolve(result);
+        } else {
+          reject(new Error(err));
+        }
+      }
+    );
+  });
 };
-const deleteData = (id) => Pool.query(`DELETE FROM category where id = ${id}`);
-module.exports = {
-  selectData,
-  insertData,
-  deleteData,
-  updateData,
+
+exports.update = ({ name, id }) => {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      'UPDATE category SET name = $1 WHERE id = $2',
+      [name, id],
+      (err, result) => {
+        if (!err) {
+          resolve(result);
+        } else {
+          reject(new Error(err));
+        }
+      }
+    );
+  });
+};
+
+exports.deleteCategory = (id) => {
+  return new Promise((resolve, reject) => {
+    pool.query('DELETE FROM category WHERE id = $1', [id], (err, result) => {
+      if (!err) {
+        resolve(result);
+      } else {
+        reject(new Error(err));
+      }
+    });
+  });
+};
+
+exports.countCategory = () => {
+  return new Promise((resolve, reject) => {
+    pool.query('SELECT COUNT(*) AS total FROM category', (err, result) => {
+      if (!err) {
+        resolve(result);
+      } else {
+        reject(new Error(err));
+      }
+    });
+  });
 };

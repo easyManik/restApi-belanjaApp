@@ -1,49 +1,46 @@
+const createError = require('http-errors');
 const jwt = require('jsonwebtoken');
-const { common } = require('./common');
-
-const key = process.env.JWT_KEY;
-
-const role = (req, res, next) => {
-  if (req.params.role == 'toko' || req.params.role == 'cust') {
-    return next();
-  }
-  return common(res, 404, false, null, 'wrong role users');
-};
-
-const roleToko = (req, res, next) => {
-  let token;
-  const auth = req.headers.authorization;
-  token = auth.split(' ')[1];
-  const decode = jwt.verify(token, key);
-  const role = decode.role;
-  if (role == 'toko') {
-    return next();
-  }
-  return common(res, 404, false, null, 'user not toko');
-};
-
 const protect = (req, res, next) => {
   try {
     let token;
-    if (req.headers.authorization) {
-      const auth = req.headers.authorization;
-      token = auth.split(' ')[1];
-      const decode = jwt.verify(token, key);
-      req.payload = decode;
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith('Bearer')
+    ) {
+      token = req.headers.authorization.split(' ')[1];
+
+      const decoded = jwt.verify(token, process.env.JWT_KEY);
+      req.decoded = decoded;
       next();
     } else {
-      return common(res, 404, false, null, 'server need token');
+      next(createError(400, 'server need token'));
     }
-  } catch (err) {
-    console.log(err);
-    if (err && err.name == 'JsonWebTokenError') {
-      return common(res, 404, false, null, 'invalid token');
+  } catch (error) {
+    console.log(error);
+    if (error && error.name === 'JsonWebTokenError') {
+      next(createError(400, 'token invalid'));
+    } else if (error && error.name === 'TokenExpiredError') {
+      next(createError(400, 'token expired'));
+    } else {
+      next(createError(400, 'token not active'));
     }
-    if (err && err.name == 'TokenExpriredError') {
-      return common(res, 404, false, null, 'expired token');
-    }
-    return common(res, 404, false, null, 'token not active');
   }
 };
 
-module.exports = { role, protect };
+const isSeller = (req, res, next) => {
+  if (req.decoded.role !== 'seller') {
+    return next(createError(400, 'seller only'));
+  }
+  next();
+};
+const isUser = (req, res, next) => {
+  if (req.decoded.role !== 'user') {
+    return next(createError(400, 'user only'));
+  }
+  next();
+};
+module.exports = {
+  protect,
+  isSeller,
+  isUser,
+};
