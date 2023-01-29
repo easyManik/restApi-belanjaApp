@@ -1,4 +1,4 @@
 node_modules
-env
-prettierignore
-prettierrc.json
+.env
+.prettierignore
+.prettierrc.json
