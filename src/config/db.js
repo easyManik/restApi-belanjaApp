@@ -15,7 +15,7 @@ pool.connect((error, client) => {
   if (error) {
     console.log("there is error: ", error)
   } else {
-    console.log("connect database " +client.database + " in "+client.host)
+    console.log("connect database in ")
   }
 });
 
