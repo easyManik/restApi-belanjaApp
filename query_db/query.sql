@@ -1,4 +1,4 @@
--- Active: 1673456722747@@localhost@5432@belanjaapp@public
+-- Active: 1675061093747@@pijardb-do-user-13063919-0.b.db.ondigitalocean.com@25060@blanya-easy@public
 /*category*/
 CREATE TABLE category(id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY, name VARCHAR(64) NOT NULL);
 
@@ -61,11 +61,11 @@ CREATE TABLE users(
     store_description VARCHAR(64),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
-    PRIMARY KEY(id)
+    PRIMARY KEY(id),
+    verif INT,
+    otp varchar(32)
 );
-
-ALTER TABLE users ADD verif INT;
-ALTER TABLE users ADD otp varchar(32);
+ 
 
 
 INSERT INTO users(id,email, password, fullname, role, phone_number, store_name) VALUES ('','easymanik151199@gmail.com', 'ten315', 'easy destini manik', 'user', '1234567890', 'abc');
