@@ -8,7 +8,7 @@ const pool = new Pool({
   port: process.env.PG_PORT,
   ssl: true,
   ssl: {
-    ca: fs.readFileSync(__dirname + './ca.crt'),
+    ca: fs.readFileSync(__dirname + '/ca.crt'),
     rejectUnauthorized: true,
   },
 });
